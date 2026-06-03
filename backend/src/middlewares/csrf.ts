@@ -1,3 +1,15 @@
-import csurf from "csurf";
+import { doubleCsrf } from 'csrf-csrf'
 
-export const csrfProtection = csurf({ cookie: true });
+const { doubleCsrfProtection, generateCsrfToken } = doubleCsrf({
+    getSecret: () => 'csrf-secret',
+    getSessionIdentifier: (req) => req.ip || 'anonymous',
+    cookieName: 'csrf-token',
+    cookieOptions: {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: false,
+    },
+})
+
+export const csrfProtection = doubleCsrfProtection
+export { generateCsrfToken }
